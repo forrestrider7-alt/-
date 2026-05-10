@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0c1620">
+<title>ФОРМА</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===================== RESET + VARS ===================== */
+:root {
+  --bg: #0c1620;
+  --surface: #142030;
+  --surface-2: #1a2840;
+  --surface-3: #1f3048;
+  --teal: #00c4b4;
+  --teal-dim: #00a898;
+  --teal-glow: rgba(0,196,180,0.18);
+  --teal-glow-2: rgba(0,196,180,0.08);
+  --orange: #ff5e2e;
+  --orange-dim: #e04f24;
+  --orange-glow: rgba(255,94,46,0.18);
+  --orange-glow-2: rgba(255,94,46,0.08);
+  --text: #e8f0f8;
+  --text-2: #6b8ba4;
+  --text-3: #3d5a70;
+  --ok: #00d4a0;
+  --danger: #ff3b5c;
+  --warn: #ffb020;
+  --sh-d: #07101a;
+  --sh-l: #1d3248;
+  --border: rgba(0,196,180,0.12);
+  --border-2: rgba(255,255,255,0.04);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation;scrollbar-width:none;-ms-overflow-style:none;}
+*::-webkit-scrollbar{display:none;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+
+/* ===================== APP SHELL ===================== */
+#app{
+  width:100%;height:100%;
+  display:flex;flex-direction:column;
+  max-width:440px;margin:0 auto;
+  position:relative;overflow:hidden;
+}
+
+/* Ambient gradient bg */
+#app::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(0,196,180,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 10% 80%, rgba(255,94,46,0.06) 0%, transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+.tab-content{
+  flex:1;overflow-y:auto;
+  padding:0 16px 90px;
+  display:none;
+  position:relative;z-index:1;
+  padding-top:calc(env(safe-area-inset-top) + 20px);
+}
+.tab-content.active{display:block;animation:fadeUp .22s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===================== BOTTOM NAV ===================== */
+.bottom-nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:440px;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  display:flex;
+  padding-bottom:env(safe-area-inset-bottom);
+  z-index:200;
+  box-shadow:0 -8px 32px rgba(0,0,0,0.5);
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  background:none;border:none;cursor:pointer;
+  color:var(--text-3);font-family:'DM Sans',sans-serif;
+  font-size:10px;font-weight:600;letter-spacing:0.04em;
+  padding:10px 0;transition:color .2s;
+}
+.nav-icon{font-size:21px;transition:transform .2s;}
+.nav-btn.active{color:var(--teal);}
+.nav-btn.active .nav-icon{transform:scale(1.12);}
+
+/* ===================== CARDS ===================== */
+.card{
+  background:var(--surface);
+  border-radius:18px;
+  padding:16px;
+  border:1px solid var(--border-2);
+  box-shadow:6px 6px 16px var(--sh-d),-3px -3px 8px var(--sh-l);
+  margin-bottom:12px;
+}
+.card-2{
+  background:var(--surface-2);
+  border-radius:14px;
+  padding:13px 14px;
+  border:1px solid var(--border-2);
+  box-shadow:4px 4px 10px var(--sh-d),-2px -2px 6px #1a2d3f;
+  margin-bottom:9px;
+}
+
+/* ===================== PAGE HEADERS ===================== */
+.page-header{margin-bottom:18px;}
+.page-title{font-size:28px;font-weight:800;color:var(--text);line-height:1.15;}
+.page-sub{font-size:13px;color:var(--text-2);margin-top:3px;font-weight:400;}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--teal-glow-2);border:1px solid rgba(0,196,180,0.3);
+  color:var(--teal);font-size:10px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:4px 10px;border-radius:20px;margin-top:8px;
+}
+
+/* ===================== PROGRESS BAR ===================== */
+.prog-wrap{margin:0 0 4px;}
+.prog-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--text-2);margin-bottom:7px;}
+.prog-labels strong{color:var(--teal);font-weight:700;}
+.prog-bar{height:5px;background:var(--surface-3);border-radius:3px;overflow:hidden;box-shadow:inset 2px 2px 5px var(--sh-d);}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--teal-dim));border-radius:3px;transition:width .4s cubic-bezier(.4,0,.2,1);}
+
+/* ===================== EXERCISE ITEMS ===================== */
+.ex-item{
+  background:var(--surface-2);border-radius:16px;
+  padding:13px 13px;margin-bottom:9px;
+  border:1px solid var(--border-2);
+  box-shadow:4px 4px 10px var(--sh-d),-2px -2px 6px #1a2d3f;
+  transition:opacity .2s,border-color .2s;
+}
+.ex-item.done{opacity:.45;border-color:rgba(0,212,160,0.15);}
+.ex-item.skill{border-left:3px solid var(--orange);}
+.ex-row{display:flex;align-items:center;gap:10px;}
+
+.ex-check{
+  width:28px;height:28px;flex-shrink:0;
+  border-radius:9px;border:2px solid var(--surface-3);
+  background:var(--surface);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+  box-shadow:3px 3px 7px var(--sh-d),-1px -1px 4px var(--sh-l);
+}
+.ex-check.on{background:var(--ok);border-color:var(--ok);box-shadow:0 0 12px rgba(0,212,160,0.35);}
+.ex-check.on::after{content:'✓';color:#0c1620;font-size:14px;font-weight:800;}
+
+.ex-info{flex:1;cursor:pointer;min-width:0;}
+.ex-name{font-size:13.5px;font-weight:600;color:var(--text);line-height:1.3;}
+.ex-meta{font-size:11.5px;color:var(--text-2);margin-top:2px;}
+.skill-tag{color:var(--orange);font-size:10px;font-weight:700;letter-spacing:0.06em;}
+
+.timer-btn{
+  background:var(--orange-glow);border:1px solid rgba(255,94,46,0.4);
+  color:var(--orange);border-radius:9px;
+  padding:7px 10px;font-size:17px;cursor:pointer;
+  transition:all .2s;flex-shrink:0;
+  box-shadow:3px 3px 7px var(--sh-d);
+}
+.timer-btn:active{background:var(--orange);color:#0c1620;transform:scale(.95);}
+
+/* ===================== REST DAY ===================== */
+.rest-screen{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;min-height:52vh;text-align:center;gap:10px;
+}
+.rest-icon{font-size:60px;margin-bottom:4px;opacity:.8;}
+.rest-title{font-size:22px;font-weight:700;color:var(--text);}
+.rest-next{font-size:14px;color:var(--text-2);}
+.rest-next em{color:var(--teal);font-style:normal;font-weight:600;}
+
+/* ===================== TIMER OVERLAY ===================== */
+#timer-overlay{
+  display:none;position:fixed;inset:0;
+  background:var(--bg);z-index:500;
+  flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 24px;
+}
+#timer-overlay.on{display:flex;animation:fadeUp .25s ease;}
+
+.t-ex-name{
+  font-size:15px;font-weight:600;color:var(--text-2);
+  text-align:center;margin-bottom:8px;max-width:280px;line-height:1.4;
+}
+.t-phase{
+  font-size:11px;font-weight:800;letter-spacing:0.18em;
+  text-transform:uppercase;margin-bottom:28px;transition:color .3s;
+}
+.t-phase.prep{color:var(--text-2);}
+.t-phase.work{color:var(--teal);}
+.t-phase.rest{color:var(--orange);}
+.t-phase.done{color:var(--ok);}
+
+.t-circle{position:relative;width:210px;height:210px;margin-bottom:28px;}
+.t-circle svg{width:210px;height:210px;transform:rotate(-90deg);}
+.t-track{fill:none;stroke:var(--surface-2);stroke-width:10;}
+.t-ring{fill:none;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .12s linear,stroke .3s;}
+.t-num{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:62px;font-weight:800;transition:color .3s;
+  font-family:'Space Grotesk',sans-serif;
+}
+.t-rounds{font-size:14px;color:var(--text-2);margin-bottom:36px;}
+.t-rounds b{color:var(--text);font-weight:700;}
+
+.t-stop{
+  background:var(--surface);border:2px solid var(--danger);
+  color:var(--danger);border-radius:50px;
+  padding:14px 44px;font-size:15px;font-weight:700;cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  box-shadow:6px 6px 16px var(--sh-d),-3px -3px 8px var(--sh-l);
+  transition:all .2s;
+}
+.t-stop:active{transform:scale(.97);background:var(--danger);color:#0c1620;}
+
+/* ===================== MODAL SHEET ===================== */
+.modal-bg{
+  display:none;position:fixed;inset:0;
+  background:rgba(7,16,26,0.82);z-index:400;
+  align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+}
+.modal-bg.on{display:flex;animation:fadeBg .2s ease;}
+@keyframes fadeBg{from{opacity:0;}to{opacity:1;}}
+.modal-sheet{
+  background:var(--surface);border-radius:24px 24px 0 0;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom));
+  width:100%;max-width:440px;
+  border:1px solid var(--border);border-bottom:none;
+  animation:slideUp .22s ease;
+}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.m-handle{width:36px;height:4px;background:var(--surface-3);border-radius:2px;margin:0 auto 18px;}
+.m-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.m-meta{font-size:12.5px;color:var(--teal);font-weight:600;margin-bottom:14px;}
+.m-desc{font-size:13.5px;color:var(--text-2);line-height:1.65;}
+.m-close{
+  display:block;width:100%;margin-top:18px;
+  background:var(--surface-2);border:1px solid var(--border);
+  color:var(--text);border-radius:12px;padding:14px;
+  font-size:15px;font-weight:600;cursor:pointer;text-align:center;
+  font-family:'DM Sans',sans-serif;
+}
+
+/* ===================== WEEK TAB ===================== */
+.goal-card{
+  background:linear-gradient(135deg,var(--surface),var(--surface-2));
+  border:1px solid rgba(0,196,180,0.25);
+  border-radius:18px;padding:16px;margin-bottom:16px;
+  box-shadow:6px 6px 16px var(--sh-d);
+}
+.goal-label{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:7px;}
+.goal-text{font-size:13.5px;color:var(--text);line-height:1.6;}
+
+.day-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px;}
+.day-card{
+  background:var(--surface);border-radius:14px;padding:13px;
+  border:1px solid var(--border-2);
+  box-shadow:4px 4px 10px var(--sh-d),-2px -2px 6px var(--sh-l);
+}
+.dc-day{font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:4px;}
+.dc-name{font-size:11.5px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.35;}
+.dc-status{font-size:20px;}
+
+.sec-label{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);margin-bottom:11px;margin-top:4px;}
+
+.skill-card{
+  background:var(--surface);border-radius:15px;padding:14px;
+  margin-bottom:9px;border:1px solid var(--border-2);
+  box-shadow:4px 4px 10px var(--sh-d),-2px -2px 6px var(--sh-l);
+}
+.sk-name{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:10px;}
+.sk-steps{display:flex;gap:5px;}
+.sk-step{
+  flex:1;background:var(--surface-2);border:1px solid transparent;
+  border-radius:9px;padding:7px 4px;text-align:center;
+  font-size:9.5px;color:var(--text-2);cursor:pointer;
+  transition:all .2s;line-height:1.35;font-weight:500;
+}
+.sk-step.on{background:var(--teal-glow);border-color:var(--teal);color:var(--teal);font-weight:700;}
+
+/* ===================== CALENDAR TAB ===================== */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.cal-month{font-size:19px;font-weight:700;color:var(--text);}
+.cal-arr{
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text);width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:17px;
+  box-shadow:3px 3px 7px var(--sh-d);
+}
+.cal-hdr{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px;}
+.cal-dn{text-align:center;font-size:10.5px;font-weight:700;color:var(--text-3);padding:4px 0;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-cell{
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;
+  border-radius:10px;font-size:12.5px;font-weight:500;
+  background:var(--surface);color:var(--text-2);
+}
+.cal-cell.empty{background:transparent;}
+.cal-cell.rest{color:var(--text-3);background:transparent;}
+.cal-cell.done{background:rgba(0,212,160,0.13);border:1px solid rgba(0,212,160,0.35);color:var(--ok);font-weight:700;}
+.cal-cell.partial{background:var(--orange-glow-2);border:1px solid rgba(255,94,46,0.35);color:var(--orange);font-weight:700;}
+.cal-cell.missed{background:rgba(255,59,92,0.08);border:1px solid rgba(255,59,92,0.25);color:var(--danger);}
+.cal-cell.today{box-shadow:0 0 0 2px var(--teal);color:var(--teal);font-weight:800;}
+
+.streak-card{
+  margin-top:20px;background:var(--surface);border-radius:18px;
+  padding:20px;display:flex;align-items:center;gap:16px;
+  border:1px solid var(--border-2);
+  box-shadow:6px 6px 16px var(--sh-d);
+}
+.streak-num{font-size:30px;font-weight:800;color:var(--orange);font-family:'Space Grotesk',sans-serif;}
+.streak-lbl{font-size:12px;color:var(--text-2);margin-top:2px;}
+
+/* ===================== RECORDS TAB ===================== */
+.rec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.add-btn{
+  background:var(--teal-glow);border:1px solid rgba(0,196,180,0.35);
+  color:var(--teal);border-radius:12px;padding:8px 16px;
+  font-size:13px;font-weight:700;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:all .2s;
+}
+.add-btn:active{background:var(--teal);color:#0c1620;}
+
+.rec-group{
+  background:var(--surface);border-radius:17px;padding:16px;
+  margin-bottom:11px;border:1px solid var(--border-2);
+  box-shadow:4px 4px 10px var(--sh-d),-2px -2px 6px var(--sh-l);
+}
+.rg-name{font-size:13.5px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.rg-max{font-size:26px;font-weight:800;color:var(--teal);margin-bottom:10px;font-family:'Space Grotesk',sans-serif;}
+.rg-max span{font-size:13px;color:var(--text-2);font-weight:400;font-family:'DM Sans',sans-serif;}
+.rg-row{display:flex;justify-content:space-between;font-size:12px;color:var(--text-2);padding:5px 0;border-top:1px solid var(--border-2);}
+.rg-row .v{color:var(--text);font-weight:600;}
+
+/* ===================== FORM ===================== */
+.form-col{display:flex;flex-direction:column;gap:11px;margin-top:14px;}
+.form-grp{display:flex;flex-direction:column;gap:5px;}
+.form-grp-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.form-label{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text-2);}
+.form-sel,.form-inp{
+  background:var(--surface-2);border:1px solid var(--border);
+  color:var(--text);border-radius:12px;padding:13px;
+  font-size:14px;font-family:'DM Sans',sans-serif;
+  width:100%;box-shadow:inset 2px 2px 6px var(--sh-d);
+  -webkit-appearance:none;appearance:none;
+}
+.submit-btn{
+  background:linear-gradient(135deg,var(--teal),var(--teal-dim));
+  border:none;color:#0c1620;border-radius:12px;
+  padding:15px;font-size:15px;font-weight:800;cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  box-shadow:0 4px 20px rgba(0,196,180,0.3);transition:all .2s;
+}
+.submit-btn:active{transform:scale(.98);}
+
+/* ===================== ONBOARDING ===================== */
+#onboard{
+  display:none;position:fixed;inset:0;background:var(--bg);
+  z-index:1000;flex-direction:column;align-items:center;justify-content:center;
+  padding:40px 28px;text-align:center;
+}
+#onboard.on{display:flex;}
+.ob-icon{font-size:64px;margin-bottom:16px;}
+.ob-title{font-size:26px;font-weight:800;color:var(--text);margin-bottom:10px;}
+.ob-sub{font-size:14px;color:var(--text-2);line-height:1.6;margin-bottom:32px;}
+.ob-inp{
+  background:var(--surface-2);border:1px solid var(--border);
+  color:var(--text);border-radius:14px;padding:15px 16px;
+  font-size:16px;font-family:'DM Sans',sans-serif;
+  width:100%;max-width:280px;text-align:center;
+  box-shadow:inset 2px 2px 6px var(--sh-d);margin-bottom:16px;
+}
+.ob-btn{
+  background:linear-gradient(135deg,var(--teal),var(--teal-dim));
+  border:none;color:#0c1620;border-radius:14px;
+  padding:16px 48px;font-size:16px;font-weight:800;cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  box-shadow:0 4px 24px rgba(0,196,180,0.35);
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- TODAY -->
+  <div class="tab-content active" id="tab-today">
+    <div id="today-inner"></div>
+  </div>
+
+  <!-- WEEK -->
+  <div class="tab-content" id="tab-week">
+    <div id="week-inner"></div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="tab-content" id="tab-calendar">
+    <div id="cal-inner"></div>
+  </div>
+
+  <!-- RECORDS -->
+  <div class="tab-content" id="tab-records">
+    <div id="rec-inner"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="today"><span class="nav-icon">⚡</span><span>Сегодня</span></button>
+    <button class="nav-btn" data-tab="week"><span class="nav-icon">📊</span><span>Неделя</span></button>
+    <button class="nav-btn" data-tab="calendar"><span class="nav-icon">📅</span><span>Календарь</span></button>
+    <button class="nav-btn" data-tab="records"><span class="nav-icon">🏆</span><span>Рекорды</span></button>
+  </nav>
+</div>
+
+<!-- TIMER OVERLAY -->
+<div id="timer-overlay">
+  <div class="t-ex-name" id="t-ex-name"></div>
+  <div class="t-phase prep" id="t-phase">ПОДГОТОВКА</div>
+  <div class="t-circle">
+    <svg viewBox="0 0 210 210"><circle class="t-track" cx="105" cy="105" r="93"/><circle class="t-ring" id="t-ring" cx="105" cy="105" r="93"/></svg>
+    <div class="t-num" id="t-num">5</div>
+  </div>
+  <div class="t-rounds">Раунд <b id="t-cur">1</b> из <b id="t-tot">4</b></div>
+  <button class="t-stop" id="t-stop">✕  Стоп</button>
+</div>
+
+<!-- EXERCISE INFO MODAL -->
+<div class="modal-bg" id="ex-modal">
+  <div class="modal-sheet">
+    <div class="m-handle"></div>
+    <div class="m-title" id="m-name"></div>
+    <div class="m-meta" id="m-meta"></div>
+    <div class="m-desc" id="m-desc"></div>
+    <button class="m-close" id="m-close">Закрыть</button>
+  </div>
+</div>
+
+<!-- ADD RECORD MODAL -->
+<div class="modal-bg" id="rec-modal">
+  <div class="modal-sheet">
+    <div class="m-handle"></div>
+    <div class="m-title">Новый рекорд</div>
+    <div class="form-col">
+      <div class="form-grp">
+        <div class="form-label">Упражнение</div>
+        <select class="form-sel" id="rf-ex">
+          <option value="pushup">Отжимания (стандарт)</option>
+          <option value="knee_pushup">Отжимания с колен</option>
+          <option value="wide_pushup">Широкие отжимания</option>
+          <option value="glute_bridge">Ягодичный мостик</option>
+          <option value="single_bridge">Мостик на одной ноге</option>
+          <option value="band_row">Тяга резинки</option>
+          <option value="table_row">Горизонтальная тяга под столом</option>
+          <option value="sumo_squat">Сумо-приседания</option>
+          <option value="plank">Планка (сек)</option>
+          <option value="jumprope">Скакалка (сек)</option>
+          <option value="other">Другое</option>
+        </select>
+      </div>
+      <div class="form-grp-row">
+        <div class="form-grp"><div class="form-label">Значение</div><input class="form-inp" type="number" id="rf-val" placeholder="0"></div>
+        <div class="form-grp"><div class="form-label">Единица</div><select class="form-sel" id="rf-unit"><option>повт</option><option>сек</option><option>кг</option></select></div>
+      </div>
+      <div class="form-grp"><div class="form-label">Дата</div><input class="form-inp" type="date" id="rf-date"></div>
+      <button class="submit-btn" id="rf-save">Сохранить</button>
+      <button class="m-close" id="rf-cancel">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARD -->
+<div id="onboard">
+  <div class="ob-icon">🤸</div>
+  <div class="ob-title">Добро пожаловать</div>
+  <div class="ob-sub">Укажи дату начала программы — с этого дня отсчитывается прогресс по 16 неделям.</div>
+  <input class="ob-inp" type="date" id="ob-date">
+  <button class="ob-btn" onclick="saveStartDate()">Начать программу</button>
+</div>
+
+<script>
+// ============================================================
+// PROGRAM DATA
+// ============================================================
+
+const WEEKS = [
+  {w:1, ph:'Начало пути', goal:'Первые тренировки — самые важные. Тело учится двигаться правильно. Не гони: техника важнее количества. Лёгкая крепатура на 2-й день — норма.'},
+  {w:2, ph:'Начало пути', goal:'Тело начинает привыкать к нагрузке. Добавляй объём по ощущениям. Если боли почти нет — это хороший знак, адаптация идёт.'},
+  {w:3, ph:'Начало пути', goal:'Финал вводной фазы. Оцени: если восстанавливаешься хорошо и движения стали увереннее — готова к следующему уровню.'},
+  {w:4, ph:'Строим форму', goal:'Объём растёт. Ягодицы и спина начнут ощущаться совсем по-другому — это мышечное пробуждение. Поддерживай белок в питании.'},
+  {w:5, ph:'Строим форму', goal:'Середина основной фазы. К этой неделе отжимания и мостик должны стать заметно легче. Фиксируй личные рекорды.'},
+  {w:6, ph:'Строим форму', goal:'Спина и ягодицы отвечают на нагрузку — визуальный прогресс уже должен быть заметен. Не пропускай тренировки — это критический период роста.'},
+  {w:7, ph:'Строим форму', goal:'Пиковая нагрузка блока. Отдыхай строго по таймеру между подходами — мышца не успевает восстановиться если сокращать.'},
+  {w:8, ph:'Строим форму', goal:'Разгрузочная неделя: объём -20%, интенсивность прежняя. Суперкомпенсация — рост — происходит именно в недели восстановления.'},
+  {w:9, ph:'Строим форму', goal:'После разгрузки возвращаем объём. Если неделя 8 прошла правильно — неделя 9 ощутимо лучше чем неделя 7. Это признак прогресса.'},
+  {w:10, ph:'Строим форму', goal:'Финал основного блока. Бей рекорды в отжиманиях, мостике, планке. Записывай всё — сравнишь с финалом.'},
+  {w:11, ph:'Пик', goal:'Финальная фаза. Максимальная интенсивность. Рабочие веса резинки и количество повторений на пике — не снижай.'},
+  {w:12, ph:'Пик', goal:'Мышцы сейчас максимально восприимчивы к нагрузке. Не пропускай тренировки — это самый продуктивный период за всю программу.'},
+  {w:13, ph:'Пик', goal:'Спина и ягодицы должны прогрессировать к более сложным вариациям. Попробуй мостик на одной ноге если ещё не освоила.'},
+  {w:14, ph:'Пик', goal:'Две недели до финала. Грудь и плечи должны заметно окрепнуть — стандартные отжимания уже должны быть уверенными.'},
+  {w:15, ph:'Пик', goal:'Предпоследняя неделя. Сними видео и сравни с первой неделей — разница в технике и объёме будет принципиальной.'},
+  {w:16, ph:'Пик', goal:'Финал! Сделай фото, зафиксируй все рекорды. 4 месяца работы — сравни себя с неделей 1. Это твой результат.'},
+];
+
+function getWorkout(week, day) {
+  const w = week;
+  const ph = w <= 3 ? 1 : w <= 10 ? 2 : 3;
+
+  // ── PROGRESSIONS ──
+  // Pushup type
+  const puName = w<=3 ? 'Отжимания с колен' : w<=6 ? 'Отжимания стандарт' : w<=10 ? 'Отжимания стандарт (строго)' : 'Широкие отжимания';
+  const puSets = w<=3 ? 3 : 4;
+  const puReps = w<=2 ? 8 : w<=4 ? 10 : w<=6 ? 12 : w<=8 ? 10 : w<=10 ? 15 : w<=13 ? 18 : 20;
+  const puDesc = w<=3
+    ? 'Колени на полу, тело прямое от колен до головы. Руки чуть шире плеч. Опускайся до касания грудью пола — и назад. Не прогибай поясницу.'
+    : w<=6
+    ? 'Полное тело от ступней до плеч — одна линия. Руки чуть шире плеч. Грудь касается пола в нижней точке. Если сложно — добавь секунду паузы внизу.'
+    : 'Строгая форма: никаких подниманий таза, никакого прогиба. Медленный спуск 3 секунды — взрывной подъём. Если не хватает сил — перейди на колени для последних повторений.';
+
+  // Glute bridge / hip thrust
+  const gbName = w<=4 ? 'Ягодичный мостик' : w<=8 ? 'Мостик с упором плечами' : w<=12 ? 'Мостик с резинкой' : 'Мостик на одной ноге';
+  const gbSets = w<=3 ? 3 : 4;
+  const gbReps = w<=2 ? 15 : w<=4 ? 20 : w<=6 ? 22 : w<=8 ? 20 : w<=10 ? 20 : w<=13 ? 15 : 20;
+  const gbDesc = w<=4
+    ? 'Лёжа на спине, ноги согнуты, ступни на ширине бёдер. Поднимай таз вверх — сожми ягодицы в верхней точке и задержись 2 секунды. Опускай медленно.'
+    : w<=8
+    ? 'Плечи на диване или стуле, ступни на полу. Опускай таз вниз, поднимай вверх с максимальным сжатием ягодиц. Это значительно эффективнее обычного мостика.'
+    : w<=12
+    ? 'Резинка выше колен. Мостик с упором плечами. Давление коленями наружу против резинки — ягодицы получают двойную нагрузку. Держи сжатие 2 секунды вверху.'
+    : 'Одна нога вытянута вверх. Поднимай таз только на одной ноге. Начни с подходов по 15, следи чтобы таз не перекашивало — это признак слабой стороны.';
+
+  // Band row
+  const rowSets = w<=3 ? 3 : 4;
+  const rowReps = w<=2 ? 12 : w<=4 ? 15 : w<=7 ? 15 : w<=10 ? 20 : 20;
+  const rowDesc = 'Встань на середину резинки, возьми концы в руки. Наклонись вперёд с прямой спиной ~45°. Тяни локти назад и вверх, сводя лопатки. Медленно возвращай. Это основное упражнение для спины.';
+
+  // Superman
+  const spDur = w<=3 ? 15 : w<=6 ? 20 : w<=9 ? 25 : 30;
+  const spSets = w<=3 ? 3 : 4;
+
+  // Donkey kick
+  const dkReps = w<=3 ? 12 : w<=6 ? 15 : w<=9 ? 18 : 20;
+  const dkSets = w<=3 ? 3 : 4;
+
+  // Plank
+  const plDur = w<=3 ? 20 : w<=5 ? 30 : w<=7 ? 40 : w<=9 ? 50 : w<=11 ? 60 : w<=13 ? 75 : 90;
+
+  // Squat
+  const sqReps = w<=3 ? 15 : w<=6 ? 20 : w<=9 ? 20 : 25;
+  const sqSets = w<=3 ? 3 : 4;
+
+  // ── TUESDAY — Спина + бицепс ──
+  if (day === 'tuesday') return [
+    {id:'row',       name:'Тяга резинки в наклоне (спина)',        sets:rowSets, reps:rowReps,   dur:null, rest:75,  timer:false,
+      desc:rowDesc},
+    {id:'superman',  name:'Супермен (удержание)',                   sets:spSets,  reps:null,      dur:spDur,rest:30,  timer:true,
+      desc:'Лечь на живот, руки вытянуты вперёд. Одновременно поднять руки и ноги от пола — задержаться. Лопатки своди, не задирай шею. Укрепляет разгибатели спины — основу красивой осанки.'},
+    {id:'pull_apart', name:'Разведение резинки на грудь',           sets:3,       reps:w<=5?15:20,dur:null, rest:60,  timer:false,
+      desc:'Держи резинку перед собой прямыми руками на уровне груди. Разводи руки в стороны до касания резинкой груди — сводя лопатки. Медленно возвращай. Задние дельты и ромбовидные — ключ к красивой спине.'},
+    {id:'face_pull', name:'Тяга резинки к лицу (задние дельты)',   sets:3,       reps:w<=5?12:15,dur:null, rest:60,  timer:false,
+      desc:'Закрепи резинку на уровне лица (дверная ручка, столб). Тяни к лицу, разводя локти в стороны — как будто хочешь показать мышцы. Задние дельты — добавляют округлость плечам сзади.'},
+    {id:'ytw',       name:'Y-T поднятия лёжа',                     sets:3,       reps:w<=5?10:12,dur:null, rest:60,  timer:false,
+      desc:'Лёжа на животе. Поднимай прямые руки: сначала в Y (вверх-вперёд), потом в T (строго в стороны). Медленно, с контролем. Нижний и средний трапеции — формируют рельеф спины.'},
+    {id:'table_row', name:'Горизонтальная тяга под столом',        sets:rowSets, reps:w<=4?8:w<=8?10:12, dur:null, rest:90, timer:false,
+      desc:'Лечь под устойчивый стол, взяться за край. Тело прямое от пяток до плеч. Подтягивать грудь к столу, сводя лопатки. Лучший заменитель тяги на турнике в домашних условиях.'},
+    {id:'band_curl', name:'Сгибания на бицепс с резинкой',         sets:3,       reps:w<=5?12:15,dur:null, rest:60,  timer:false,
+      desc:'Встань на резинку, возьми концы нейтральным хватом или хватом снизу. Сгибай руки к плечам, локти прижаты к корпусу. Медленно опускай — негатив так же важен.'},
+    {id:'hammer_curl',name:'Молотковые сгибания с резинкой',       sets:3,       reps:w<=5?12:15,dur:null, rest:60,  timer:false,
+      desc:'Резинка под ногами, нейтральный хват (большой палец вверх). Сгибай поочерёдно. Прорабатывает брахиалис — даёт объём и рельеф рукам сбоку.'},
+  ];
+
+  // ── THURSDAY — Ягодицы + ноги ──
+  if (day === 'thursday') return [
+    {id:'jumprope',  name:'Скакалка (разминка)',                    sets:1,  reps:null,    dur:w<=3?90:w<=7?120:150, rest:30, timer:true,
+      desc:'Прыжки в умеренном темпе. Не нужно делать двойные — просто ритмично. Если устала — переходи на бег на месте. Разгоняет кровь и подготавливает суставы.'},
+    {id:'gb',        name:gbName,                                   sets:gbSets,reps:gbReps,dur:null, rest:75,  timer:false,
+      desc:gbDesc},
+    {id:'dk_l',      name:'Отведение ноги назад на четвереньках',  sets:dkSets,reps:dkReps,dur:null, rest:60,  timer:false,
+      desc:'На четвереньках. Поднимай ногу назад и вверх, сгибая в колене под 90°. Стопа параллельна потолку. Сжимай ягодицу в верхней точке. Выполни на каждую ногу — не переключайся до конца подхода.'},
+    {id:'fh',        name:'Пожарный гидрант с резинкой',           sets:dkSets,reps:dkReps,dur:null, rest:60,  timer:false,
+      desc:'Резинка чуть выше колен. На четвереньках. Поднимай ногу в сторону как открывающийся люк — колено сгибается, бедро поднимается строго в сторону. Малая ягодичная — создаёт округлость сбоку.'},
+    {id:'sumo',      name:'Сумо-приседания с резинкой',            sets:sqSets,reps:sqReps, dur:null, rest:75,  timer:false,
+      desc:'Резинка выше колен. Ноги шире плеч, носки развёрнуты 45°. Опускайся глубоко — ниже параллели если можешь. Давление коленями наружу против резинки. Внутренняя и большая ягодичные под двойной нагрузкой.'},
+    {id:'curtsy',    name:'Реверансные выпады',                    sets:3, reps:w<=4?10:w<=8?12:15, dur:null, rest:75, timer:false,
+      desc:'Стоя, скрести одну ногу за другой по диагонали назад — опускайся вниз как в реверансе. Чередуй ноги. Лучшее упражнение для внешнего рельефа ягодиц.'},
+    {id:'single_gb', name:'Мостик на одной ноге',                  sets:3, reps:w<=5?8:w<=9?10:12, dur:null, rest:75, timer:false,
+      desc:'Одна нога вытянута вверх. Поднимай таз на опорной ноге. Если сложно — начни с просто поднятой ноги без выпрямления. Выравнивает силу правой и левой ягодицы.'},
+    {id:'pulse_sq',  name:'Пульсирующие приседания',               sets:3, reps:w<=4?20:w<=8?25:30, dur:null, rest:60, timer:false,
+      desc:'Опустись в приседание и держись внизу. Делай маленькие пульсирующие движения вверх-вниз не выходя из нижней точки. Жжение — признак правильной работы.'},
+    {id:'kickback',  name:'Отведение ноги назад с резинкой (стоя)',sets:3, reps:w<=5?15:18, dur:null, rest:60, timer:false,
+      desc:'Резинка вокруг щиколоток. Стоя, держись за стену. Отводи ногу назад и вверх, не сгибая колено. Сжимай ягодицу в верхней точке. Выполни все повторения на одну ногу, затем другую.'},
+  ];
+
+  // ── SATURDAY — Фулбади (длинная) ──
+  if (day === 'saturday') return [
+    {id:'jr_sat',    name:'Скакалка (разминка)',                    sets:1, reps:null,   dur:w<=4?120:w<=9?150:180, rest:30, timer:true,
+      desc:'Умеренный ритм. Цель — разогреться, не выдохнуться. Если сбиваешься — несколько прыжков без скакалки и снова.'},
+    {id:'row_sat',   name:'Тяга резинки в наклоне (спина)',        sets:4, reps:rowReps, dur:null, rest:75,  timer:false, desc:rowDesc},
+    {id:'sp_sat',    name:'Супермен (удержание)',                   sets:4, reps:null,   dur:spDur,rest:30,  timer:true,
+      desc:'Лечь на живот, руки вперёд. Поднять руки и ноги одновременно. Лопатки своди, взгляд в пол. Укрепляет весь задний массив — основа красивой спины и осанки.'},
+    {id:'gb_sat',    name:gbName,                                   sets:4, reps:gbReps, dur:null, rest:75,  timer:false, desc:gbDesc},
+    {id:'pu_sat',    name:puName,                                   sets:puSets, reps:puReps, dur:null, rest:75, timer:false, desc:puDesc},
+    {id:'sq_sat',    name:'Приседания глубокие',                   sets:4, reps:sqReps, dur:null, rest:75,  timer:false,
+      desc:'Ноги на ширине плеч. Опускайся максимально глубоко — ниже параллели. Спина прямая, взгляд вперёд. Вставай через пятки. Глубокое приседание включает ягодицы значительно больше обычного.'},
+    {id:'pa_sat',    name:'Разведение резинки на грудь',            sets:3, reps:w<=5?15:20, dur:null, rest:60, timer:false,
+      desc:'Резинку держать перед собой, руки прямые. Разводи до касания грудью, сводя лопатки. Задние дельты и ромбовидные. Медленно возвращай.'},
+    {id:'dk_sat',    name:'Отведение ноги на четвереньках',        sets:3, reps:dkReps, dur:null, rest:60,  timer:false,
+      desc:'На каждую ногу. Поднимай согнутую ногу назад, стопа параллельна потолку. Без рывков. Сжимай ягодицу в верхней точке.'},
+    {id:'bc_sat',    name:'Сгибания на бицепс с резинкой',         sets:3, reps:w<=5?12:15, dur:null, rest:60, timer:false,
+      desc:'Встань на резинку. Сгибай руки к плечам с локтями у корпуса. Медленный негатив — 3 секунды вниз.'},
+    {id:'plank_sat', name:'Планка',                                 sets:3, reps:null,   dur:plDur,rest:30,  timer:true,
+      desc:'Упор на предплечья или прямые руки. Тело — одна прямая линия: таз не поднимать, не провисать. Напряги пресс и ягодицы одновременно. Дыши.'},
+    {id:'legraise',  name:'Подъёмы ног лёжа',                      sets:3, reps:w<=5?10:w<=9?12:15, dur:null, rest:60, timer:false,
+      desc:'Лёжа на спине, поясница прижата к полу. Поднимай прямые ноги до 90° — медленно опускай не касаясь пола. Нижний пресс и сгибатели бедра.'},
+  ];
+
+  // ── SUNDAY — Грудь + плечи + трицепс ──
+  if (day === 'sunday') return [
+    {id:'pu_sun',    name:puName,                                   sets:puSets, reps:puReps, dur:null, rest:75, timer:false, desc:puDesc},
+    {id:'wide_pu',   name:'Широкие отжимания (акцент грудь)',      sets:puSets, reps:w<=4?8:w<=8?10:w<=12?13:15, dur:null, rest:75, timer:false,
+      desc:`Руки шире плеч на 15-20 см. Локти идут наружу при опускании — чувствуй растяжение в грудных. ${w<=4?'Можно с колен':w<=8?'Полная форма':'Медленный негатив 3 секунды'}.`},
+    {id:'incline_pu',name:'Отжимания с ногами на возвышении',      sets:3, reps:w<=5?6:w<=9?8:10, dur:null, rest:90, timer:false,
+      desc:'Ноги на диване или стуле, руки на полу. Верхняя часть груди под большей нагрузкой. Тело прямое, без прогиба. Сложнее стандартных — делай столько сколько можешь.'},
+    {id:'band_press',name:'Жим резинки вперёд / над головой',      sets:3, reps:w<=5?12:15, dur:null, rest:60, timer:false,
+      desc:'Встань на резинку, концы у плеч. Жим прямо перед собой (грудь) или вверх над головой (плечи). Контролируй возврат — не бросай руки назад.'},
+    {id:'lat_raise', name:'Разводка резинки в стороны (плечи)',    sets:3, reps:w<=5?12:15, dur:null, rest:60, timer:false,
+      desc:'Встань на резинку. Поднимай руки в стороны до уровня плеч — не выше. Лёгкое натяжение, полный контроль. Средние дельты — создают ширину плеч.'},
+    {id:'diamond_pu',name:'Алмазные отжимания (трицепс)',          sets:3, reps:w<=4?8:w<=8?10:12, dur:null, rest:75, timer:false,
+      desc:`Руки в треугольник под грудью. ${w<=5?'Можно с колен — важна техника':'Полная форма'}. Трицепс — основной объём задней части руки. Разгибай до конца вверху.`},
+    {id:'chair_dip', name:'Отжимания от стула (трицепс)',          sets:3, reps:w<=4?8:w<=8?10:w<=12?12:15, dur:null, rest:75, timer:false,
+      desc:'Ладони на краю стула за спиной, ноги вытянуты вперёд. Сгибай локти — опускайся вниз, затем разгибай. Локти идут строго назад, не в стороны.'},
+    {id:'band_tri',  name:'Разгибание трицепса с резинкой',        sets:3, reps:w<=5?12:15, dur:null, rest:60, timer:false,
+      desc:'Закрепи резинку вверху (дверь, шкаф). Тяни концы вниз разгибая руки. Локти неподвижны у корпуса. Длинная головка трицепса — максимальный объём.'},
+    {id:'pike_sun',  name:'Пайк-отжимания (плечи)',                sets:3, reps:w<=5?8:w<=9?10:12, dur:null, rest:75, timer:false,
+      desc:'Тело в перевёрнутую V (таз вверх, ноги прямые). Опускай голову к полу сгибая локти — поднимай. Похоже на отжимание но нагрузка идёт на передние дельты и трицепс.'},
+    {id:'plank_tap', name:'Планка с касанием плеча',               sets:3, reps:null, dur:w<=4?20:w<=8?25:30, rest:30, timer:true,
+      desc:'В положении планки на прямых руках поочерёдно касайся противоположного плеча. Таз не вращать — напряги кор. Работает всё: плечи, пресс, стабилизаторы.'},
+  ];
+
+  return [];
+}
+
+// ============================================================
+// STORAGE
+// ============================================================
+const S = {
+  get(k, def=null){try{const v=localStorage.getItem(k);return v!==null?JSON.parse(v):def;}catch{return def;}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}},
+};
+
+function getStartDate(){ return S.get('wl_start',''); }
+function setStartDate(d){ S.set('wl_start',d); }
+
+function getCurrentWeek(){
+  const s=getStartDate();
+  if(!s)return 1;
+  const diff=Math.floor((Date.now()-new Date(s).getTime())/(7*24*3600*1000));
+  return Math.max(1,Math.min(16,diff+1));
+}
+
+function todayKey(){
+  const d=new Date();
+  return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+}
+
+function daySlug(){
+  return ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][new Date().getDay()];
+}
+
+const TRAINING = new Set(['tuesday','thursday','saturday','sunday']);
+
+const DAY_LABEL={tuesday:'Вторник',thursday:'Четверг',saturday:'Суббота',sunday:'Воскресенье'};
+const DAY_WKT={tuesday:'Спина и бицепс',thursday:'Ягодицы и ноги',saturday:'Фулбади (длинная)',sunday:'Грудь, плечи и трицепс'};
+
+function getCompleted(dateStr,day){
+  return (S.get('wl_done',{})[`${dateStr}-${day}`])||[];
+}
+function toggleDone(dateStr,day,id){
+  const all=S.get('wl_done',{});
+  const k=`${dateStr}-${day}`;
+  if(!all[k])all[k]=[];
+  const i=all[k].indexOf(id);
+  if(i===-1)all[k].push(id);else all[k].splice(i,1);
+  S.set('wl_done',all);
+  return all[k].includes(id);
+}
+function markDone(dateStr,day,id){
+  const all=S.get('wl_done',{});
+  const k=`${dateStr}-${day}`;
+  if(!all[k])all[k]=[];
+  if(!all[k].includes(id))all[k].push(id);
+  S.set('wl_done',all);
+}
+function getSkill(){return S.get('wl_skill',{planche:0,frontlever:0,muscleup:0,handstand:0});}
+function setSkill(k,v){const s=getSkill();s[k]=v;S.set('wl_skill',s);}
+function getRecs(){return S.get('wl_recs',[]);}
+function addRec(r){const a=getRecs();a.push(r);S.set('wl_recs',a);}
+
+// ============================================================
+// TIMER
+// ============================================================
+const CIRC = 2*Math.PI*93; // r=93
+let tmState=null,tmInt=null,tmExId=null,tmDay=null,tmDate=null;
+
+function setRing(pct,color){
+  const r=document.getElementById('t-ring');
+  if(!r)return;
+  r.style.strokeDasharray=CIRC;
+  r.style.strokeDashoffset=CIRC*(1-pct);
+  r.style.stroke=color;
+}
+function setPhase(phase){
+  const el=document.getElementById('t-phase');
+  const num=document.getElementById('t-num');
+  if(!el||!num)return;
+  const map={
+    prep:{cls:'prep',lbl:'ПОДГОТОВКА',col:'#6b8ba4'},
+    work:{cls:'work',lbl:'РАБОТА',col:'var(--teal)'},
+    rest:{cls:'rest',lbl:'ОТДЫХ',col:'var(--orange)'},
+    done:{cls:'done',lbl:'ГОТОВО!',col:'var(--ok)'},
+  };
+  const m=map[phase];
+  el.className=`t-phase ${m.cls}`;
+  el.textContent=m.lbl;
+  num.style.color=m.col;
+}
+
+function beep(freq,dur,vol=0.25){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.frequency.value=freq;o.type='sine';
+    g.gain.setValueAtTime(vol,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+    o.start();o.stop(ctx.currentTime+dur);
+  }catch{}
+}
+
+function startTimer(ex){
+  if(tmInt)clearInterval(tmInt);
+  tmExId=ex.id;
+  document.getElementById('t-ex-name').textContent=ex.name;
+  document.getElementById('t-tot').textContent=ex.sets;
+  document.getElementById('timer-overlay').classList.add('on');
+  runPrep(ex,1);
+}
+
+function runPrep(ex,round){
+  setPhase('prep');
+  document.getElementById('t-cur').textContent=round;
+  let t=5;
+  document.getElementById('t-num').textContent=t;
+  setRing(1,'#6b8ba4');
+  beep(440,.15);
+  if(tmInt)clearInterval(tmInt);
+  tmInt=setInterval(()=>{
+    t--;
+    document.getElementById('t-num').textContent=t;
+    setRing(t/5,'#6b8ba4');
+    if(t<=0){clearInterval(tmInt);runWork(ex,round);}
+  },1000);
+}
+
+function runWork(ex,round){
+  setPhase('work');
+  let t=ex.dur;
+  document.getElementById('t-num').textContent=t;
+  setRing(1,'#00c4b4');
+  beep(880,.2);
+  if(tmInt)clearInterval(tmInt);
+  tmInt=setInterval(()=>{
+    t--;
+    document.getElementById('t-num').textContent=t;
+    setRing(t/ex.dur,'#00c4b4');
+    if(t<=0){
+      clearInterval(tmInt);
+      beep(660,.2);
+      if(round>=ex.sets){finishTimer(ex);}
+      else{runRest(ex,round);}
+    }
+  },1000);
+}
+
+function runRest(ex,round){
+  setPhase('rest');
+  let t=ex.rest;
+  document.getElementById('t-num').textContent=t;
+  setRing(1,'#ff5e2e');
+  if(tmInt)clearInterval(tmInt);
+  tmInt=setInterval(()=>{
+    t--;
+    document.getElementById('t-num').textContent=t;
+    setRing(t/ex.rest,'#ff5e2e');
+    if(t<=3&&t>0)beep(440,.1,.18);
+    if(t<=0){clearInterval(tmInt);runPrep(ex,round+1);}
+  },1000);
+}
+
+function finishTimer(ex){
+  setPhase('done');
+  document.getElementById('t-num').textContent='✓';
+  setRing(1,'#00d4a0');
+  beep(880,.1);setTimeout(()=>beep(1100,.2),150);
+  setTimeout(()=>{
+    stopTimer();
+    markDone(tmDate,tmDay,ex.id);
+    renderToday();
+  },1600);
+}
+
+function stopTimer(){
+  if(tmInt)clearInterval(tmInt);
+  tmInt=null;
+  document.getElementById('timer-overlay').classList.remove('on');
+  tmExId=null;
+}
+
+// ============================================================
+// RENDER TODAY
+// ============================================================
+let curExercises=[];
+
+function renderToday(){
+  const day=daySlug();
+  const week=getCurrentWeek();
+  const date=todayKey();
+  tmDay=day;tmDate=date;
+  const el=document.getElementById('today-inner');
+
+  if(!TRAINING.has(day)){
+    const jsDay=new Date().getDay();
+    const trainingJsDays=[2,4,6,0];
+    let nextName='';
+    for(let i=1;i<=7;i++){
+      const n=(jsDay+i)%7;
+      if(trainingJsDays.includes(n)){
+        const map={2:'tuesday',4:'thursday',6:'saturday',0:'sunday'};
+        nextName=DAY_WKT[map[n]];break;
+      }
+    }
+    el.innerHTML=`
+      <div class="page-header">
+        <div class="page-title">Сегодня</div>
+        <div class="page-sub">Неделя ${week} из 16 · ${WEEKS[week-1].ph}</div>
+      </div>
+      <div class="rest-screen">
+        <div class="rest-icon">😴</div>
+        <div class="rest-title">День отдыха</div>
+        <div class="rest-next">Следующая тренировка:<br><em>${nextName}</em></div>
+      </div>`;
+    return;
+  }
+
+  const exs=getWorkout(week,day);
+  curExercises=exs;
+  const done=getCompleted(date,day);
+  const doneN=exs.filter(e=>done.includes(e.id)).length;
+  const pct=exs.length?Math.round(doneN/exs.length*100):0;
+
+  const exsHTML=exs.map(ex=>{
+    const isDone=done.includes(ex.id);
+    const metaTxt=ex.timer
+      ?`${ex.sets} подх × ${ex.dur}с  ·  отдых ${ex.rest}с`
+      :`${ex.sets} × ${ex.reps==='AMRAP'?'AMRAP':ex.reps+' повт'}  ·  отдых ${ex.rest}с`;
+    return `
+      <div class="ex-item${isDone?' done':''}${ex.skill?' skill':''}" id="ei-${ex.id}">
+        <div class="ex-row">
+          <div class="ex-check${isDone?' on':''}" onclick="handleCheck('${ex.id}','${date}','${day}')"></div>
+          <div class="ex-info" onclick="showExModal('${ex.id}')">
+            <div class="ex-name">${ex.name}${ex.skill?` <span class="skill-tag">★ СКИЛЛ</span>`:''}</div>
+            <div class="ex-meta">${metaTxt}</div>
+          </div>
+          ${ex.timer?`<button class="timer-btn" onclick="handleTimer('${ex.id}')">⏱</button>`:''}
+        </div>
+      </div>`;
+  }).join('');
+
+  el.innerHTML=`
+    <div class="page-header">
+      <div class="page-title">${DAY_LABEL[day]}</div>
+      <div class="page-sub">${DAY_WKT[day]}</div>
+      <div class="badge">⚡ ${WEEKS[week-1].ph} · Неделя ${week}</div>
+    </div>
+    <div class="card">
+      <div class="prog-wrap">
+        <div class="prog-labels"><span>Выполнено</span><strong>${doneN} / ${exs.length}</strong></div>
+        <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+      </div>
+    </div>
+    ${exsHTML}`;
+}
+
+function handleCheck(id,date,day){
+  const was=getCompleted(date,day).includes(id);
+  if(!was&&tmExId===id)stopTimer();
+  toggleDone(date,day,id);
+  renderToday();
+}
+function handleTimer(id){
+  const ex=curExercises.find(e=>e.id===id);
+  if(!ex)return;
+  if(tmExId)stopTimer();
+  startTimer(ex);
+}
+function showExModal(id){
+  const ex=curExercises.find(e=>e.id===id);
+  if(!ex)return;
+  const meta=ex.timer?`${ex.sets} подх × ${ex.dur}с  ·  отдых ${ex.rest}с`:`${ex.sets} × ${ex.reps==='AMRAP'?'AMRAP':ex.reps+' повт'}  ·  отдых ${ex.rest}с`;
+  document.getElementById('m-name').textContent=ex.name;
+  document.getElementById('m-meta').textContent=meta;
+  document.getElementById('m-desc').textContent=ex.desc;
+  document.getElementById('ex-modal').classList.add('on');
+}
+
+// ============================================================
+// RENDER WEEK
+// ============================================================
+function renderWeek(){
+  const week=getCurrentWeek();
+  const meta=WEEKS[week-1];
+  const sp=getSkill();
+  const skills=[
+    {k:'pushup',    n:'💪 Отжимания стандарт',     steps:['С колен','10 подряд','20 подряд','30 подряд']},
+    {k:'bridge',    n:'🍑 Мостик на одной ноге',   steps:['2 ноги ×15','1 нога (нест.)','1 нога ×10','1 нога ×20']},
+    {k:'plank',     n:'🧘 Планка',                  steps:['20 сек','45 сек','90 сек','3 мин']},
+    {k:'jumprope',  n:'⚡ Скакалка без остановки',  steps:['1 мин','3 мин','5 мин','10 мин']},
+  ];
+  const allDone=S.get('wl_done',{});
+
+  const dayCards=['tuesday','thursday','saturday','sunday'].map(d=>{
+    const exs=getWorkout(week,d);
+    const keys=Object.keys(allDone).filter(k=>k.endsWith(`-${d}`));
+    let status='⬜',sc='';
+    if(keys.length){
+      const latest=keys.sort().pop();
+      const dn=allDone[latest]||[];
+      if(dn.length>=exs.length&&dn.length>0){status='✅';sc='color:var(--ok)';}
+      else if(dn.length>0){status='🔸';}
+    }
+    return `<div class="day-card">
+      <div class="dc-day">${DAY_LABEL[d]}</div>
+      <div class="dc-name">${DAY_WKT[d]}</div>
+      <div class="dc-status" style="${sc}">${status}</div>
+    </div>`;
+  }).join('');
+
+  const skillsHTML=skills.map(s=>{
+    const lv=sp[s.k]||0;
+    return `<div class="skill-card">
+      <div class="sk-name">${s.n}</div>
+      <div class="sk-steps">${s.steps.map((st,i)=>`<div class="sk-step${lv===i?' on':''}" onclick="updateSkill('${s.k}',${i})">${st}</div>`).join('')}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('week-inner').innerHTML=`
+    <div class="page-header">
+      <div class="page-title">Неделя ${week} из 16</div>
+      <div class="page-sub">${meta.ph}</div>
+    </div>
+    <div class="goal-card">
+      <div class="goal-label">🎯 Цель недели</div>
+      <div class="goal-text">${meta.goal}</div>
+    </div>
+    <div class="sec-label">ТРЕНИРОВКИ ЭТОЙ НЕДЕЛИ</div>
+    <div class="day-grid">${dayCards}</div>
+    <div class="sec-label">ЛИЧНЫЙ ПРОГРЕСС</div>
+    ${skillsHTML}`;
+}
+function updateSkill(k,v){setSkill(k,v);renderWeek();}
+
+// ============================================================
+// RENDER CALENDAR
+// ============================================================
+let calDt=new Date();
+function renderCalendar(){
+  const y=calDt.getFullYear(),m=calDt.getMonth();
+  const MN=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  const DN=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+  const firstDay=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const offset=(firstDay+6)%7;
+  const today=new Date();
+  const allDone=S.get('wl_done',{});
+  const week=getCurrentWeek();
+  const trMap={2:'tuesday',4:'thursday',6:'saturday',0:'sunday'};
+
+  let cells='';
+  for(let i=0;i<offset;i++)cells+=`<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=days;d++){
+    const dt=new Date(y,m,d);
+    const jsDay=dt.getDay();
+    const dayName=trMap[jsDay];
+    const ds=`${y}-${m+1}-${d}`;
+    const isToday=d===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
+    const isPast=dt<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    let cls='cal-cell';
+    if(!dayName){cls+=' rest';}
+    else{
+      const k=`${ds}-${dayName}`;
+      const dn=allDone[k]||[];
+      const exCount=getWorkout(week,dayName).length;
+      if(isToday)cls+=' today';
+      else if(dn.length>=exCount&&dn.length>0)cls+=' done';
+      else if(dn.length>0)cls+=' partial';
+      else if(isPast&&dayName)cls+=' missed';
+    }
+    cells+=`<div class="${cls}">${d}</div>`;
+  }
+
+  // Streak
+  let streak=0;
+  // Count consecutive weeks with all 4 training days completed
+  const startD=getStartDate();
+  if(startD){
+    const startMs=new Date(startD).getTime();
+    const curW=getCurrentWeek();
+    for(let wk=curW-1;wk>=1;wk--){
+      const weekStart=new Date(startMs+(wk-1)*7*24*3600*1000);
+      let allComplete=true;
+      for(const td of['tuesday','thursday','saturday','sunday']){
+        // find the date of this training day in that week
+        let found=false;
+        for(let dd=0;dd<7;dd++){
+          const testDt=new Date(weekStart.getTime()+dd*24*3600*1000);
+          if(trMap[testDt.getDay()]===td){
+            const ds2=`${testDt.getFullYear()}-${testDt.getMonth()+1}-${testDt.getDate()}`;
+            const k=`${ds2}-${td}`;
+            const dn=allDone[k]||[];
+            const exCount=getWorkout(wk,td).length;
+            if(dn.length<exCount)allComplete=false;
+            found=true;break;
+          }
+        }
+        if(!found)allComplete=false;
+      }
+      if(allComplete)streak++;else break;
+    }
+  }
+
+  document.getElementById('cal-inner').innerHTML=`
+    <div class="page-header"><div class="page-title">Календарь</div></div>
+    <div class="cal-nav">
+      <button class="cal-arr" onclick="changeMonth(-1)">‹</button>
+      <div class="cal-month">${MN[m]} ${y}</div>
+      <button class="cal-arr" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-hdr">${DN.map(n=>`<div class="cal-dn">${n}</div>`).join('')}</div>
+    <div class="cal-grid">${cells}</div>
+    <div class="streak-card">
+      <div style="font-size:34px">🔥</div>
+      <div>
+        <div class="streak-num">${streak}</div>
+        <div class="streak-lbl">недель подряд без пропусков</div>
+      </div>
+    </div>`;
+}
+function changeMonth(d){calDt.setMonth(calDt.getMonth()+d);renderCalendar();}
+
+// ============================================================
+// RENDER RECORDS
+// ============================================================
+const EX_NAMES={pushup:'Отжимания стандарт',knee_pushup:'Отжимания с колен',wide_pushup:'Широкие отжимания',glute_bridge:'Ягодичный мостик',single_bridge:'Мостик на одной ноге',band_row:'Тяга резинки',table_row:'Тяга под столом',sumo_squat:'Сумо-приседания',plank:'Планка',jumprope:'Скакалка',other:'Другое'};
+function renderRecords(){
+  const recs=getRecs();
+  let inner='';
+  if(!recs.length){
+    inner=`<div class="rest-screen" style="min-height:42vh"><div style="font-size:52px">📈</div><div class="rest-title">Нет записей</div><div class="rest-next">Добавь первый рекорд!</div></div>`;
+  } else {
+    const g={};
+    recs.forEach(r=>{if(!g[r.ex])g[r.ex]=[];g[r.ex].push(r);});
+    inner=Object.entries(g).map(([ex,rs])=>{
+      const sorted=[...rs].sort((a,b)=>b.val-a.val);
+      const max=sorted[0];
+      const hist=sorted.slice(1,5);
+      return `<div class="rec-group">
+        <div class="rg-name">${EX_NAMES[ex]||ex}</div>
+        <div class="rg-max">${max.val} <span>${max.unit}</span></div>
+        ${hist.map(h=>`<div class="rg-row"><span>${h.date}</span><span class="v">${h.val} ${h.unit}</span></div>`).join('')}
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('rec-inner').innerHTML=`
+    <div class="rec-header">
+      <div class="page-title">Рекорды</div>
+      <button class="add-btn" onclick="openRecModal()">+ Добавить</button>
+    </div>${inner}`;
+}
+function openRecModal(){
+  const t=new Date();
+  document.getElementById('rf-date').value=`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+  document.getElementById('rec-modal').classList.add('on');
+}
+
+// ============================================================
+// ONBOARDING
+// ============================================================
+function saveStartDate(){
+  const v=document.getElementById('ob-date').value;
+  if(!v)return;
+  setStartDate(v);
+  document.getElementById('onboard').classList.remove('on');
+  renderToday();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded',()=>{
+  // Onboard if no start date
+  if(!getStartDate()){
+    const ob=document.getElementById('onboard');
+    const t=new Date();
+    document.getElementById('ob-date').value=`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+    ob.classList.add('on');
+  } else {
+    renderToday();
+  }
+
+  // Tab switching
+  document.querySelectorAll('.nav-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const tab=btn.dataset.tab;
+      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(`tab-${tab}`).classList.add('active');
+      if(tab==='today')renderToday();
+      else if(tab==='week')renderWeek();
+      else if(tab==='calendar')renderCalendar();
+      else if(tab==='records')renderRecords();
+    });
+  });
+
+  // Timer stop
+  document.getElementById('t-stop').addEventListener('click',stopTimer);
+
+  // Exercise modal
+  document.getElementById('m-close').addEventListener('click',()=>document.getElementById('ex-modal').classList.remove('on'));
+  document.getElementById('ex-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('on');});
+
+  // Record modal
+  document.getElementById('rf-cancel').addEventListener('click',()=>document.getElementById('rec-modal').classList.remove('on'));
+  document.getElementById('rec-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.classList.remove('on');});
+  document.getElementById('rf-save').addEventListener('click',()=>{
+    const ex=document.getElementById('rf-ex').value;
+    const val=parseFloat(document.getElementById('rf-val').value);
+    const unit=document.getElementById('rf-unit').value;
+    const date=document.getElementById('rf-date').value;
+    if(!val||isNaN(val))return;
+    addRec({ex,val,unit,date});
+    document.getElementById('rec-modal').classList.remove('on');
+    renderRecords();
+  });
+});
+</script>
+</body>
+</html>
